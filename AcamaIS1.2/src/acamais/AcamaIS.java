@@ -1,8 +1,8 @@
-///// que pasa
+
 /*  Alberto Candel Busquets
     Alberto Zapata de Miguel   */
-//hola
-//hola
+
+
 package acamais;
 
 import java.io.FileWriter;
