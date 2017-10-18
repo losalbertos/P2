@@ -34,7 +34,8 @@ public class AcamaIS {
                     + "4. Listar en pantalla los miembros con motos en posesión: " + "\n"
                     + "5. Listar todas las motos: " + "\n"
                     + "6. Mostrar las cesiones realizadas: " + "\n"
-                    + "7. Salir del programa: " + "\n");
+                    + "7. Incrementar costos añadidos a las motos: " + "\n"
+                    + "8. Salir del programa: " + "\n");
             opcion = entrada.nextInt();
 
             switch (opcion) {
@@ -63,6 +64,10 @@ public class AcamaIS {
                     x = true;
                     break;
                 case 7:
+                    a.incrementarGastos();
+                    x=true;
+                    break;
+                case 8:
                     a.guardarYsalir();
                     x=false;
                     break;
@@ -106,7 +111,7 @@ public class AcamaIS {
     //OPCION 2
     public void creaMotos() {
         String m, mt; 
-        int c, p, soci, cuenta, pr, contadorMotos;
+        int c, p, soci, cuenta, pr, contadorMotos,cA;
         int contador = 1;
         int contador2 = 0;
         boolean b = true;
@@ -120,6 +125,7 @@ public class AcamaIS {
                 System.out.println("Introduzca la cilindrada de la moto: ");c = md.nextInt();
                 System.out.println("Introduzca el precio de la moto: "); p = md.nextInt();
                 System.out.println("Introduzca el propietario de la moto: "); pr = md.nextInt();
+                System.out.println("Introduzca costos añadidos: "); cA = md.nextInt();
         
                 for (int i=0; i<miembros.size(); i++){
                     contadorMotos = miembros.get(i).getNumeroMotos();
@@ -127,7 +133,7 @@ public class AcamaIS {
                     cuenta = miembros.get(i).getPrecioMotos();
             
                     if((pr == soci) && (cuenta+p <= 6000) ){
-                        motos.add(new Motos(m, mt, c, p, pr));
+                        motos.add(new Motos(m, mt, c, p, pr,cA));
                         contadorMotos++;
                         
                         miembros.get(i).setNumeroMotos(contadorMotos);
@@ -246,12 +252,30 @@ public class AcamaIS {
         
         return cesiones;
     }
+    //opcion7
     
-    //OPCION 7
+    public void incrementarGastos(){
+        String moto,motoCatalogo;
+        int costeAdicional,coste;
+        Scanner md = new Scanner(System.in);
+        System.out.println("Introduzca la moto que vaya a ser cedida: "); moto = md.next();
+        System.out.println("Introduzca el costo añadido: "); costeAdicional = md.nextInt();
+        for (int j=0; j<motos.size();j++){
+                motoCatalogo=motos.get(j).getMatricula();
+                    if (motoCatalogo.equals(moto)){
+                        coste=motos.get(j).getCostesAnyadidos();
+                        motos.get(j).setCostesAnyadidos(costeAdicional+coste);
+                        
+                    }
+        }
+    }
+    
+    //OPCION 8
     public void guardarYsalir() {
         String fich;
         FileWriter fichero = null;
         PrintWriter pw = null;
+        
         Scanner md = new Scanner(System.in);
         System.out.println("Introduzca el nombre del fichero: "); fich = md.next();
         try{
