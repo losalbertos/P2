@@ -37,7 +37,8 @@ public class AcamaIS {
                     + "5. Listar todas las motos: " + "\n"
                     + "6. Mostrar las cesiones realizadas: " + "\n"
                     + "7. Incrementar costos añadidos a las motos: " + "\n"
-                    + "8. Salir del programa: " + "\n");
+                    + "8. Eliminar Socio de la base de datos " + "\n"
+                    + "9. Salir del programa: " + "\n");
             opcion = entrada.nextInt();
 
             switch (opcion) {
@@ -70,6 +71,10 @@ public class AcamaIS {
                     x=true;
                     break;
                 case 8:
+                    a.eliminarSocio();
+                    x=true;
+                    break;    
+                case 9:
                     a.guardarYsalir();
                     x=false;
                     break;
@@ -235,6 +240,20 @@ public class AcamaIS {
         
         return miembros;
     }
+    
+    
+     public ArrayList listarMiembrostotal() {
+        if(miembros.isEmpty() == false){
+          
+            for (int i = 0; i < miembros.size(); i++) {
+             
+                    System.out.println(miembros.get(i));
+                
+            }
+        }else System.out.println("No hay ningún socio con motos en posesión\n");
+        
+        return miembros;
+    }
 
     //OPCION 5
     public ArrayList listarMotos(){
@@ -275,7 +294,33 @@ public class AcamaIS {
         }
     }
     
+    
     //OPCION 8
+    public void eliminarSocio(){
+    int socio,socio1,numMotos;
+    Scanner md = new Scanner(System.in);
+    System.out.println("Introduzca el número de socio que desea abandonar la asociación: "); socio = md.nextInt();
+    for (int i=0;i<miembros.size();i++){
+        socio1=miembros.get(i).getSocio();
+        numMotos=miembros.get(i).getNumeroMotos();
+        if((socio==socio1)&&(numMotos>0)){
+            System.out.println("Este miembro no puede ser eliminado ya que aun tiene motos en posesión \n");
+            System.out.println("Ceda las motos que pertenezcan a este socio entre los distintos miembros de la asociación");
+            listarMiembrostotal();
+            listarMotos();
+            registrarCesion();
+            eliminarSocio();
+        }
+        else{
+        miembros.remove(i);
+        System.out.println("Miembro eliminado correctamente ");
+        }
+    }
+    
+    
+    
+    }
+    //OPCION 9
     public void guardarYsalir() {
         String fich;
         FileWriter fichero = null;
