@@ -297,7 +297,9 @@ public class AcamaIS {
     
     //OPCION 8
     public void eliminarSocio(){
-    int socio,socio1,numMotos;
+        
+    int socio,socio1,numMotos,tope;
+    tope=topeGasto.getTope();
     Scanner md = new Scanner(System.in);
     System.out.println("Introduzca el número de socio que desea abandonar la asociación: "); socio = md.nextInt();
     for (int i=0;i<miembros.size();i++){
@@ -305,7 +307,8 @@ public class AcamaIS {
         numMotos=miembros.get(i).getNumeroMotos();
         if((socio==socio1)&&(numMotos>0)){
             System.out.println("Este miembro no puede ser eliminado ya que aun tiene motos en posesión \n");
-            System.out.println("Ceda las motos que pertenezcan a este socio entre los distintos miembros de la asociación");
+            System.out.println("Ceda las motos que pertenezcan a este socio entre los distintos miembros de la asociación \n");
+            System.out.println("Recuerde que el tope de gasto por socio es: "+tope);
             listarMiembrostotal();
             listarMotos();
             registrarCesion();
@@ -329,7 +332,7 @@ public class AcamaIS {
         Scanner md = new Scanner(System.in);
         System.out.println("Introduzca el nombre del fichero: "); fich = md.next();
         try{
-            fichero = new FileWriter("C:\\Users\\Alberto" +fich);
+            fichero = new FileWriter("C:\\Users\\Zapata\\" +fich);
             pw = new PrintWriter(fichero);
             pw.println(listarMiembros());
             pw.println(listarCesiones()); 
