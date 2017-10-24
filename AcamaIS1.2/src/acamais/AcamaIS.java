@@ -4,10 +4,12 @@
 
 
 package acamais;
-
+import acamais.Miembros.OrderByCes;
+import java.util.Arrays;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -18,10 +20,11 @@ public class AcamaIS {
     private ArrayList<Miembros> miembros = new ArrayList<Miembros>();
     private ArrayList<Cesiones> cesiones = new ArrayList<Cesiones>();
     private TopeGasto topeGasto=new TopeGasto();
-    
+    private OrdenByCes o=new OrdenByCes();
     public static void main(String[] args) {
         boolean x = false;
         AcamaIS a = new AcamaIS();
+        
 
         int opcion;
         int tope;
@@ -38,7 +41,8 @@ public class AcamaIS {
                     + "6. Mostrar las cesiones realizadas: " + "\n"
                     + "7. Incrementar costos añadidos a las motos: " + "\n"
                     + "8. Eliminar Socio de la base de datos " + "\n"
-                    + "9. Salir del programa: " + "\n");
+                    +"9. Miembro que ha recibido más cesiones " + "\n"
+                    + "10. Salir del programa: " + "\n");
             opcion = entrada.nextInt();
 
             switch (opcion) {
@@ -74,12 +78,19 @@ public class AcamaIS {
                     a.eliminarSocio();
                     x=true;
                     break;    
+                   
                 case 9:
+                    a.mostrarMaxCesiones();
+                    x=true;
+                    break;     
+                case 10:
                     a.guardarYsalir();
                     x=false;
                     break;
             }
         } while (x == true);
+        
+       
     }
 
     //OPCION 1
@@ -102,7 +113,7 @@ public class AcamaIS {
                     System.out.println("Introduzca nombre de socio: "); n = nm.next();
                     
                     if (exi == false){
-                        miembros.add(new Miembros(s, n, 0, 0));
+                        miembros.add(new Miembros(s, n, 0, 0,0));
                     }
                     b = false;
                 
@@ -164,7 +175,7 @@ public class AcamaIS {
     public void registrarCesion(){
         String moto, motoCatalogo; 
         int socio1, socio2, soci;
-        int cuentaSocio, precioMoto, contadorMotos;
+        int cuentaSocio, precioMoto, contadorMotos,contadorCesiones;
         int valido1 = 1, valido2 = 0;
         int tope;
         boolean b = true;
@@ -193,9 +204,11 @@ public class AcamaIS {
                                 cesiones.add(new Cesiones(moto,socio1,socio2,fecha));
                                 contadorMotos=miembros.get(i).getNumeroMotos();
                                 contadorMotos++;
-                   
+                                contadorCesiones=miembros.get(i).getNumCesiones();
+                                contadorCesiones++;
                                 miembros.get(i).setPrecioMotos(total);
                                 miembros.get(i).setNumeroMotos(contadorMotos);
+                                miembros.get(i).setNumCesiones(contadorCesiones);
                                 motos.get(j).setSocio(socio2);
                                 valido2++;
                     
@@ -289,7 +302,7 @@ public class AcamaIS {
                     if (motoCatalogo.equals(moto)){
                         coste=motos.get(j).getCostesAnyadidos();
                         motos.get(j).setCostesAnyadidos(costeAdicional+coste);
-                        
+                        System.out.println("Los gastos añadidos han sido actualizados \n");
                     }
         }
     }
@@ -302,6 +315,7 @@ public class AcamaIS {
     tope=topeGasto.getTope();
     Scanner md = new Scanner(System.in);
     System.out.println("Introduzca el número de socio que desea abandonar la asociación: "); socio = md.nextInt();
+    
     for (int i=0;i<miembros.size();i++){
         socio1=miembros.get(i).getSocio();
         numMotos=miembros.get(i).getNumeroMotos();
@@ -314,16 +328,50 @@ public class AcamaIS {
             registrarCesion();
             eliminarSocio();
         }
-        else{
+        else if((socio==socio1) && (numMotos==0)){
         miembros.remove(i);
         System.out.println("Miembro eliminado correctamente ");
         }
     }
+     }
+    //opcion9
     
-    
-    
+    public ArrayList mostrarMaxCesiones() {
+        int iNumeroMayor, iPosicion;
+ 
+    //Presuponemos que el numero mayor es el primero
+        iNumeroMayor = miembros.get(0).getNumCesiones();
+        iPosicion = 0;
+        //int miembroC, miembroM,cuenta;
+       // cuenta=0;
+       /*
+        for (int i=0;i<miembros.size();i++){
+            
+            miembroM=miembros.get(i).getSocio();
+            
+            for (int j=0;j<cesiones.size();j++){
+                miembroC=cesiones.get(i).getSocioImplicado2();
+                if(miembroM==miembroC){cuenta++;}
+            }
+           miembros.get(i).setNumCesiones(cuenta);
+        }*/
+        
+       
+        for (int i=0;i<miembros.size();i++){
+            
+            if (miembros.get(i).getNumCesiones()>iNumeroMayor){
+               iNumeroMayor= miembros.get(i).getNumCesiones();
+               iPosicion=i; 
+                
+            }
+         
+        }
+    System.out.println("El socio que mayor cesiones ha recibido es: \n"); 
+    System.out.println(miembros.get(iPosicion));
+    return miembros;
     }
-    //OPCION 9
+   
+    //OPCION 10
     public void guardarYsalir() {
         String fich;
         FileWriter fichero = null;
@@ -346,4 +394,6 @@ public class AcamaIS {
             }
         }
     }
+        
 }
+
